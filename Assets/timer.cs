@@ -8,6 +8,9 @@ public class timer : MonoBehaviour
     public int turn_time = 60;
     private int turn_time_tmp = 60;
     private Text text;
+	public Text whos_turn;
+	public GameObject[] player;
+	private int turn_index = 0;
 
     // Use this for initialization
     void Start()
@@ -15,6 +18,8 @@ public class timer : MonoBehaviour
         turn_time_tmp = turn_time;
         text = GetComponent<Text>();
         StartCoroutine("counter");
+		
+		whos_turn.text = player[turn_index].GetComponent<move_with_keys>().player_name + " turn";
     }
 
     // Update is called once per frame
@@ -43,7 +48,9 @@ public class timer : MonoBehaviour
 
     public void turn_end()
     {
-
+		turn_index++;
+		turn_index = turn_index % player.Length;
+		whos_turn.text = player[turn_index].GetComponent<move_with_keys>().player_name + "'s turn";
     }
 
 }

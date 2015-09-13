@@ -4,11 +4,10 @@ using System.Collections;
 public class manager_script : MonoBehaviour {
 
 	public smoth_fllow camera; 
-
-	public GameObject good_tank;
-	
+	public GameObject tank;
+	public GameObject game_rect;
+	public GameObject camera_follow_obj;
 	public float focos_time_on_explotion = 3.0f;
-	public float focos_time_on_tank_after_bullet_expoled = 1.0f;
 
 
 	// Use this for initialization
@@ -33,9 +32,10 @@ public class manager_script : MonoBehaviour {
 
 	IEnumerator __go_to_tank(){
 		yield return new WaitForSeconds (focos_time_on_explotion);
-		camera.target = good_tank;
-		yield return new WaitForSeconds (focos_time_on_tank_after_bullet_expoled);
-		camera.enabled = false;
+		//camera.target = good_tank;
+		Vector3 newPos = new Vector3(-tank.transform.position.x, -tank.transform.position.y, game_rect.transform.position.z);
+		game_rect.transform.position = newPos;
+		camera.target = camera_follow_obj;
 	}
 
 

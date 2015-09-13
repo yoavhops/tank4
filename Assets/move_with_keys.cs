@@ -9,6 +9,7 @@ public class move_with_keys : MonoBehaviour {
     private WheelJoint2D[] wheels;
     public float motor_speed = 0;
     private float motor_speed_last = 0;
+	public string player_name;
 
     // Use this for initialization
     void Start () {

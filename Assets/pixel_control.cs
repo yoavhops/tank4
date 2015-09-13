@@ -38,8 +38,8 @@ public class pixel_control : MonoBehaviour
     private int bg_height;
 
     public GameObject tank;
-    public GameObject tank_r;
-    public GameObject tank_l;
+
+
     public int max_sloop = 10;
     // Use this for initialization
     void Start()
@@ -318,7 +318,10 @@ public class pixel_control : MonoBehaviour
     }
 
 	public void world_to_pixel_pos(float x, float y, ref int pixel_x, ref int pixel_y)
-    {
+	{
+		x = x - transform.position.x;
+		y = y - transform.position.y;
+
         x = x * 100;
         y = y * 100;
         x += bg_width / 2;
@@ -327,6 +330,7 @@ public class pixel_control : MonoBehaviour
         pixel_y = (int)y;
     }
 
+	/*
     public void pixel_pos_to_world(int p_x, int p_y, ref float x, ref float y)
     {
         p_x -= bg_width / 2;
@@ -334,6 +338,8 @@ public class pixel_control : MonoBehaviour
         x = p_x / 100f;
         y = p_y / 100f;
     }
+	*/
+
 	public void update_collider(){
 		Destroy(GetComponent<PolygonCollider2D>());
 		
