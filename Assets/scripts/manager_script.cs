@@ -46,11 +46,13 @@ public class manager_script : Photon.MonoBehaviour {
 		gui_debug.debug("I am player : " + ( PhotonNetwork.player.ID - 1) );
 		m_touch_screen.start_game (player [PhotonNetwork.player.ID - 1]);
 	}
+
 	// Update is called once per frame
-	void Update () {
-	
+	void Update() {
+		if (Input.GetKey("escape"))
+			Application.LoadLevel("menus");
 	}
-	
+
 	public void follow_bullet(GameObject bullet){
 		photonView.RPC ("follow_bullet_RPC", PhotonTargets.All, bullet);
 	}
