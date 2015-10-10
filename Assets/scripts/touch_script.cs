@@ -321,16 +321,28 @@ public class touch_script : Photon.MonoBehaviour
 
     [PunRPC]
     public void shot_RPC(int photon_player_id, Vector2 fire_dir, Vector3 canon_edge_pos, int bullet_type)
-    {   
-        GameObject new_bullet = (GameObject)Instantiate(good_tank_bullet);
-        new_bullet.transform.parent = the_game.transform;
-        new_bullet.transform.position = canon_edge_pos;
-        new_bullet.GetComponent<Rigidbody2D>().AddForce(fire_dir);
+    {
 
+        if (PhotonNetwork.isMasterClient)
+        {
+
+            GameObject new_bullet = PhotonNetwork.InstantiateSceneObject(good_tank_bullet.name, canon_edge_pos, Quaternion.identity, 0, null);
+            photonView.RPC("new_bullet_RPC", PhotonTargets.All, new_bullet.GetComponent<PhotonView>().viewID);
+            new_bullet.GetComponent<Rigidbody2D>().AddForce(fire_dir);
+        }
+        
+    }
+
+
+    [PunRPC]
+    public void new_bullet_RPC(int view_id)
+    {
+
+        GameObject new_bullet = PhotonView.Find(view_id).gameObject;
         manager.follow_bullet(new_bullet);
 
         //todo timer stop
         m_timer.stop_timer();
+        new_bullet.transform.parent = the_game.transform;
     }
-
 }

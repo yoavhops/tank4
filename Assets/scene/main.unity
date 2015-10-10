@@ -4892,7 +4892,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   AutoConnect: 1
-  amount_of_players: 1
+  amount_of_players: 2
   Version: 1
 --- !u!114 &1129840036
 MonoBehaviour:

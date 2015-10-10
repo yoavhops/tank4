@@ -25,7 +25,8 @@ public class timer : MonoBehaviour
 		whos_turn.text = manager.player_name() + "'s turn";
 		if (timer_coroutine != null) {
 			StopCoroutine (timer_coroutine);
-		}
+            timer_coroutine = null;
+        }
 		timer_coroutine = counter ();
 		StartCoroutine(timer_coroutine);
 	}
@@ -47,10 +48,10 @@ public class timer : MonoBehaviour
             turn_time_tmp--;
             if (turn_time_tmp < 0)
             {
-				if (is_master_client){
-					turn_end_by_timer();
-				}
                 timer_coroutine = null;
+                if (is_master_client){
+                    turn_end_by_timer();
+				}
                 break;
             }
         }
@@ -63,9 +64,12 @@ public class timer : MonoBehaviour
 
     public void stop_timer()
     {
+        Debug.Log("Stop_timer1");
         if (timer_coroutine != null)
         {
+            Debug.Log("Stop_timer2");
             StopCoroutine(timer_coroutine);
+            timer_coroutine = null;
         }
     }
 

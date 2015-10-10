@@ -20,8 +20,8 @@ public class bullet_script : Photon.MonoBehaviour
 	
 	// Update is called once per frame
 	void Update () {
-	
-	}
+     
+    }
 
 
 	void FixedUpdate(){
