@@ -50,7 +50,8 @@ public class timer : MonoBehaviour
 				if (is_master_client){
 					turn_end_by_timer();
 				}
-				return true;
+                timer_coroutine = null;
+                break;
             }
         }
     }
