@@ -23,11 +23,19 @@ public class gold_control : MonoBehaviour {
 	public static void set_gold(int gold) {
 		PlayerPrefs.SetInt(GOLD_KEY,gold);
 	}
-
+	
 	public void Fee25()	{
+		PayFee(25);
+	}
+	
+	public void Buy100() {
+		BuyGold(100);
+	}
+	
+	public void PayFee(int fee)	{
 		int gold = get_gold();
-		if (gold >= 25) {
-			gold -= 25;
+		if (gold >= fee) {
+			gold -= fee;
 			set_gold(gold);
 			current_gold.text = gold.ToString();
 			Application.LoadLevel("main");
@@ -36,10 +44,10 @@ public class gold_control : MonoBehaviour {
 			//TODO: goto buy screen
 		}
 	}
-
-	public void Buy100() {
+	
+	public void BuyGold(int gold) {
 		//TODO: goto buy screen
-		set_gold(get_gold()+100);
+		set_gold(get_gold()+gold);
 		current_gold.text = get_gold().ToString();
 	}
 }
