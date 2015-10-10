@@ -312,6 +312,7 @@ public class touch_script : Photon.MonoBehaviour
 
             if (lpm.btn.name == "weapon")
             {
+                Debug.Log(good_tank_canon_shoting_edge.transform.position);
                 photonView.RPC("shot_RPC", PhotonTargets.All, PhotonNetwork.player.ID, fire_dir, good_tank_canon_shoting_edge.transform.position, 0);
             }
         }
