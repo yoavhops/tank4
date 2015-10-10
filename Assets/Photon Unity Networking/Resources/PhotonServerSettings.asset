@@ -38,4 +38,6 @@ MonoBehaviour:
   - start_game_RPC
   - turn_end_RPC
   - follow_bullet_RPC
+  - shot_RPC
+  - bulllet_collided_RPC
   DisableAutoOpenWizard: 1

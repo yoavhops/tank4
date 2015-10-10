@@ -3,7 +3,9 @@ using System.Collections;
 using UnityEngine.UI;
 
 
-public class touch_script : MonoBehaviour {
+[RequireComponent(typeof(PhotonView))]
+public class touch_script : Photon.MonoBehaviour
+{
 
 	public manager_script manager;
 
@@ -52,6 +54,9 @@ public class touch_script : MonoBehaviour {
 
 	public bool my_turn = false;
 	private bool game_started = false;
+
+    public timer m_timer;
+
 	// Use this for initialization
 	void Start () {
 		mouse_on = clicked_on.nothing;
@@ -171,26 +176,7 @@ public class touch_script : MonoBehaviour {
 
 				if (shot){
 					shot = false;
-					Vector2 canon_angle_vec2 = new Vector2(diff_norm.x, diff_norm.y);
-					canon_angle_vec2 *=-1;
-					float distnace = Vector3.Distance(new_mouse_pos, good_tank.transform.position);
-					float distnace_ratio = distnace /( max_amount_of_arrows * size_of_arrow);
-
-					if (distnace > min_distance){
-						if (lpm.btn.name == "weapon"){
-							GameObject new_bullet =(GameObject) Instantiate(good_tank_bullet);
-							new_bullet.transform.parent = the_game.transform;
-							new_bullet.transform.position = good_tank_canon_shoting_edge.transform.position;
-							new_bullet.GetComponent<Rigidbody2D>().AddForce( canon_angle_vec2 * shoting_force * distnace_ratio);
-
-							manager.follow_bullet(new_bullet);
-
-						}
-						if (lpm.btn.name == "jump"){
-							good_tank.GetComponent<Rigidbody2D>().AddForce( canon_angle_vec2 * jumping_force * distnace_ratio);
-							disable_tank_rigids(good_tank);
-						}
-					}
+                    shot_f();
 				}
 			}
 		}
@@ -306,5 +292,44 @@ public class touch_script : MonoBehaviour {
 			collide.isTrigger = false;
 		}
 	}
+    
+    public void shot_f()
+    {
+        Vector2 canon_angle_vec2 = new Vector2(diff_norm.x, diff_norm.y);
+        canon_angle_vec2 *= -1;
+        float distnace = Vector3.Distance(new_mouse_pos, good_tank.transform.position);
+        float distnace_ratio = distnace / (max_amount_of_arrows * size_of_arrow);
+
+        if (distnace > min_distance)
+        {
+            Vector2 fire_dir = canon_angle_vec2 * shoting_force * distnace_ratio;
+
+            if (lpm.btn.name == "jump")
+            {
+                good_tank.GetComponent<Rigidbody2D>().AddForce(fire_dir);
+                disable_tank_rigids(good_tank);
+            }
+
+            if (lpm.btn.name == "weapon")
+            {
+                photonView.RPC("shot_RPC", PhotonTargets.All, PhotonNetwork.player.ID, fire_dir, good_tank_canon_shoting_edge.transform.position, 0);
+            }
+        }
+    }
+
+
+    [PunRPC]
+    public void shot_RPC(int photon_player_id, Vector2 fire_dir, Vector3 canon_edge_pos, int bullet_type)
+    {   
+        GameObject new_bullet = (GameObject)Instantiate(good_tank_bullet);
+        new_bullet.transform.parent = the_game.transform;
+        new_bullet.transform.position = canon_edge_pos;
+        new_bullet.GetComponent<Rigidbody2D>().AddForce(fire_dir);
+
+        manager.follow_bullet(new_bullet);
+
+        //todo timer stop
+        m_timer.stop_timer();
+    }
 
 }

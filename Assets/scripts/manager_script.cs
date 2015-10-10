@@ -51,33 +51,32 @@ public class manager_script : Photon.MonoBehaviour {
 	
 	}
 	
-	public void follow_bullet(GameObject bullet){
-		photonView.RPC ("follow_bullet_RPC", PhotonTargets.All, bullet);
-	}
-	
-	[PunRPC]
-	public void follow_bullet_RPC(GameObject bullet){
-		camera.GetComponent<smoth_fllow>().follow(bullet, camera_follow_type.Bullet);
-	}
+	public void follow_bullet(GameObject bullet)
+    {
+        camera.GetComponent<smoth_fllow>().follow(bullet, camera_follow_type.Bullet);
+    }
 
-	public void go_to_tank(){
+    //bullet_exploded
+	public void bullet_exploded(){
 		Debug.Log("pre");
-		StartCoroutine(__go_to_tank());
+        player_turn++;
+        player_turn = player_turn % player.Length;
+        StartCoroutine(__go_to_tank(focos_time_on_explotion));
 	}
 
-	IEnumerator __go_to_tank(){
-		yield return new WaitForSeconds (focos_time_on_explotion);
+	IEnumerator __go_to_tank(float wait){
+		yield return new WaitForSeconds (wait);
 		//camera.target = good_tank;
 		Vector3 newPos = new Vector3(-tank.transform.position.x, -tank.transform.position.y, game_rect.transform.position.z);
 		game_rect.transform.position = newPos;
 		camera.GetComponent<smoth_fllow>().follow(camera_follow_obj, camera_follow_type.Rect);
-	}
+        photonView.RPC("turn_end_RPC", PhotonTargets.All, player_turn);
+    }
 
 	public void turn_end_by_timer(){
 		player_turn++;
 		player_turn = player_turn % player.Length;
 		photonView.RPC ("turn_end_RPC", PhotonTargets.All, player_turn);
-
 	}
 	
 	[PunRPC]

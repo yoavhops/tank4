@@ -61,4 +61,12 @@ public class timer : MonoBehaviour
 		manager.turn_end_by_timer();
     }
 
+    public void stop_timer()
+    {
+        if (timer_coroutine != null)
+        {
+            StopCoroutine(timer_coroutine);
+        }
+    }
+
 }

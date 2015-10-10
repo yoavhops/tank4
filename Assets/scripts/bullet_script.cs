@@ -1,7 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class bullet_script : MonoBehaviour {
+
+[RequireComponent(typeof(PhotonView))]
+public class bullet_script : Photon.MonoBehaviour
+{
 	private Vector2 wind_str;
     private pixel_control pixel_cnr;
     public GameObject explosion;
@@ -32,8 +35,12 @@ public class bullet_script : MonoBehaviour {
 
     void OnCollisionEnter2D(Collision2D coll)
     {
-        GameObject explo = Instantiate(explosion) as GameObject;
-        explo.transform.position = transform.position;
+
+        if (!PhotonNetwork.isMasterClient)
+        {
+            return;
+        }
+        photonView.RPC("bulllet_collided_RPC", PhotonTargets.All, transform.position);
         /*
         Sprite sprite =  GetComponent<SpriteRenderer>().sprite;
 
@@ -41,14 +48,24 @@ public class bullet_script : MonoBehaviour {
             (int)sprite.textureRect.width, (int)sprite.textureRect.height,
             (int)sprite.textureRect.x, (int)sprite.textureRect.y, sprite.texture);
         */
-		destory_this ();
 
     }
 
 	void destory_this(){
-		game_manager.go_to_tank();
+		game_manager.bullet_exploded();
 		Destroy(gameObject);
 	}
+
+    [PunRPC]
+    public void bulllet_collided_RPC(Vector3 position)
+    {
+        GameObject explo = Instantiate(explosion) as GameObject;
+        explo.transform.position = position;
+
+        destory_this();
+    }
+
+
 
 
 }
